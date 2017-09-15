@@ -14,7 +14,7 @@ class Optimizer:
                              computation of relative links
         """
         self.wiki = wiki
-        self.base_directory = base_directory 
+        self.base_directory = base_directory
 
     def optimize_url(self, url, fout):
         """ @url: input url path
@@ -39,7 +39,7 @@ class Optimizer:
         self.fix_layout()
         self.replace_css_links()
         self.update_links()
-        self.fix_footer()
+        # self.fix_footer()
 
         # ensure that target directory exists (necessary for subpages)
         try:
@@ -90,7 +90,7 @@ class Optimizer:
         # FIXME: pass css fille name as parameter
         # overwrite first
         links[0].set("href", os.path.join(self.relbase, "ArchWikiOffline.css"))
-        
+
         # remove the rest
         for link in links[1:]:
             link.getparent().remove(link)
@@ -131,7 +131,7 @@ class Optimizer:
             (normally 'div.printfooter' is given 'display:none' and is separated by
             the categories list from the real footer)
         """
-
+        print(lxml.etree.tostring(self.root)) # DEBUG
         for printfooter in self.root.cssselect("div.printfooter"):
             printfooter.attrib.pop("class")
             printfooter.tag = "li"
