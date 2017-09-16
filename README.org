@@ -1,0 +1,13 @@
+# -*- mode: org; -*-
+#+TITLE: arch-wiki-docs
+#+AUTHOR: thekrampus
+
+forked from [[https://github.com/lahwaacz/arch-wiki-docs][lahwaacz/arch-wiki-docs]]
+
+* usage
+#+begin_src bash
+$ virtualenv python_modules
+$ source python_modules/bin/activate
+$ pip install -r requirements.txt
+$ ./arch-wiki-docs.py --output-directory wiki
+#+end_src
