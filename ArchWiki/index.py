@@ -11,8 +11,10 @@ from lxml import html
 
 from ArchWiki import language_names
 
+__all__ = ["build_index"]
+
 # path to template
-default_template_path = 'templates/index.html'
+default_template_path = os.path.join('templates', 'index.html')
 
 # default template key values
 template_keys = {
@@ -32,13 +34,15 @@ date_format = '%a, %d %b %Y %H:%M:%S'
 locales = {v['subtag']: k for k, v in language_names.items()}
 
 def build_index(out_path, template_path=default_template_path, arg_keys={}):
+    out_file = os.path.join(out_path, 'index.html')
+    print("Building index at {}".format(out_file))
     populate_keys(arg_keys)
     build_locale_content()
     with open(template_path, 'r') as template_in:
         index = template_in.read()
     for key, value in template_keys.items():
         index = index.replace('${{{}}}'.format(key), value)
-    with open(out_path, 'wb') as out:
+    with open(out_file, 'wb') as out:
         out.write(index.encode('utf-8'))
 
 def populate_keys(arg_keys={}):
