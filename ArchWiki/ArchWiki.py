@@ -10,7 +10,7 @@ import hashlib
 
 from simplemediawiki import MediaWiki
 
-__all__ = ["ArchWiki"]
+__all__ = ["ArchWiki", "language_names"]
 
 url = "https://wiki.archlinux.org/api.php"
 local_language = "English"
