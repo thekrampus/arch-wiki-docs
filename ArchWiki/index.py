@@ -14,17 +14,23 @@ from ArchWiki import language_names
 __all__ = ["build_index"]
 
 # path to template
-default_template_path = os.path.join('templates', 'index.html')
+default_template_path = os.path.join('templates', 'index.php')
 
 # default template key values
 template_keys = {
+    'app.url': 'https://github.com/thekrampus/arch-wiki-docs',
+    'app.name': 'arch-wiki-docs',
+    'app.version': '1.0',
+    'search.php': '',
     'mirror.name': 'local',
     'mirror.date': 'the last update',
     'mirror.locale.main': 'en',
     'mirror.locale.content': '',
-    'app.url': 'https://github.com/thekrampus/arch-wiki-docs',
-    'app.name': 'arch-wiki-docs',
-    'app.version': '1.0',
+}
+
+# paths of available embedded search engines
+search_templates = {
+    'basic': os.path.join('templates', 'basic_search.php')
 }
 
 # datetime format string
@@ -33,11 +39,17 @@ date_format = '%a, %d %b %Y %H:%M:%S'
 # build map from locales to language names
 locales = {v['subtag']: k for k, v in language_names.items()}
 
-def build_index(out_path, template_path=default_template_path, arg_keys={}):
-    out_file = os.path.join(out_path, 'index.html')
+def build_index(out_path,
+                template_path=default_template_path,
+                arg_keys={},
+                search_engine="basic"):
+    out_file = os.path.join(out_path, 'index.php')
     print("Building index at {}".format(out_file))
+
     populate_keys(arg_keys)
     build_locale_content()
+    embed_search(search_engine)
+
     with open(template_path, 'r') as template_in:
         index = template_in.read()
     for key, value in template_keys.items():
@@ -45,7 +57,7 @@ def build_index(out_path, template_path=default_template_path, arg_keys={}):
     with open(out_file, 'wb') as out:
         out.write(index.encode('utf-8'))
 
-def populate_keys(arg_keys={}):
+def populate_keys(arg_keys):
     # add keys passed as arguments (overrides default & detected keys)
     template_keys.update(arg_keys)
     if 'mirror.name' not in arg_keys:
@@ -75,3 +87,7 @@ def build_locale_content():
         ul.append(E.LI(_locale_link(locale)))
     content.append(ul)
     template_keys['mirror.locale.content'] = html.tostring(content).decode('utf-8')
+
+def embed_search(engine):
+    with open(search_templates[engine], 'r') as template_in:
+        template_keys['search.php'] = template_in.read()

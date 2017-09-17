@@ -1,3 +1,4 @@
+<!-- -*- mode: html; -*- -->
 <!DOCTYPE html>
 <html class="client-nojs" lang="en" dir="ltr">
   <head>
@@ -27,8 +28,21 @@
           </p>
           <p>Pages found here reflect the content of the ArchWiki as of ${mirror.date}. They have been optimized for offline viewing. To view the latest wiki content, edit pages or add new content, visit <a href="https://wiki.archlinux.org">the live ArchWiki</a>.
           </p>
-          <h2><span class="mw-headline" id="Browse">Browse the ArchWiki</span></h2>
-          ${mirror.locale.content}
+          <form action="index.php" method="GET">
+            <input id="search" name="search" type="text" placeholder="Search mirror content">
+            <input id="submit" type="submit" value="Go">
+          </form>
+          <?php
+            if (isset($_GET['search'])) {
+            echo '<h2>Page content search results for "' . $_GET['search'] . '"</h2>';
+            ${search.php}
+            } else {
+            echo '<h2><span class="mw-headline" id="Browse">Browse the ArchWiki</span></h2>';
+            echo '
+            ${mirror.locale.content}
+            ';
+            }
+            ?>
           <hr>
 		  <div id="footer" role="contentinfo" style="font-size:80%">
 			<ul id="footer-info">
